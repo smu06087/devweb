@@ -82,10 +82,12 @@ class LottoBall extends HTMLElement {
 
 customElements.define('lotto-ball', LottoBall);
 
-// Main Logic
-document.addEventListener('DOMContentLoaded', () => {
+// --- Lotto Logic ---
+const initLotto = () => {
   const container = document.getElementById('ball-container');
   const generateBtn = document.getElementById('generate-btn');
+
+  if (!container || !generateBtn) return;
 
   const generateLottoNumbers = () => {
     const numbers = new Set();
@@ -96,26 +98,106 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const updateUI = () => {
-    // Clear container
     container.innerHTML = '';
-    
     const numbers = generateLottoNumbers();
-    
     numbers.forEach((num, index) => {
       setTimeout(() => {
         const ball = document.createElement('lotto-ball');
         ball.setAttribute('number', num);
         container.appendChild(ball);
-      }, index * 100); // Staggered animation
+      }, index * 100);
     });
   };
 
   generateBtn.addEventListener('click', () => {
-    // Disable button briefly to prevent spam
     generateBtn.disabled = true;
     updateUI();
     setTimeout(() => {
       generateBtn.disabled = false;
     }, 1000);
   });
+};
+
+// --- Animal AI Logic ---
+const TM_URL = "https://teachablemachine.withgoogle.com/models/7zneaY_Vl/";
+let model, webcam, labelContainer, maxPredictions;
+
+const initAI = async () => {
+  const startBtn = document.getElementById('ai-start-btn');
+  const webcamContainer = document.getElementById('webcam-container');
+  labelContainer = document.getElementById('label-container');
+
+  if (!startBtn) return;
+
+  startBtn.addEventListener('click', async () => {
+    startBtn.disabled = true;
+    startBtn.querySelector('.btn-text').textContent = "모델 로딩 중...";
+
+    const modelURL = TM_URL + "model.json";
+    const metadataURL = TM_URL + "metadata.json";
+
+    try {
+      model = await tmImage.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
+
+      const flip = true;
+      webcam = new tmImage.Webcam(200, 200, flip);
+      await webcam.setup();
+      await webcam.play();
+      window.requestAnimationFrame(loopAI);
+
+      webcamContainer.innerHTML = '';
+      webcamContainer.appendChild(webcam.canvas);
+
+      // Setup labels with progress bars
+      labelContainer.innerHTML = '';
+      for (let i = 0; i < maxPredictions; i++) {
+        const prediction = document.createElement("div");
+        prediction.classList.add("prediction-bar");
+        prediction.innerHTML = `
+          <div class="prediction-label">
+            <span class="class-name"></span>
+            <span class="probability">0%</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill"></div>
+          </div>
+        `;
+        labelContainer.appendChild(prediction);
+      }
+
+      startBtn.style.display = 'none';
+    } catch (error) {
+      console.error("AI Init Error:", error);
+      startBtn.disabled = false;
+      startBtn.querySelector('.btn-text').textContent = "AI 테스트 시작하기 (오류 발생)";
+    }
+  });
+};
+
+const loopAI = async () => {
+  webcam.update();
+  await predictAI();
+  window.requestAnimationFrame(loopAI);
+};
+
+const predictAI = async () => {
+  const prediction = await model.predict(webcam.canvas);
+  for (let i = 0; i < maxPredictions; i++) {
+    const className = prediction[i].className;
+    const probability = (prediction[i].probability * 100).toFixed(0);
+    
+    const bar = labelContainer.childNodes[i];
+    if (bar) {
+      bar.querySelector('.class-name').textContent = className;
+      bar.querySelector('.probability').textContent = `${probability}%`;
+      bar.querySelector('.bar-fill').style.width = `${probability}%`;
+    }
+  }
+};
+
+// --- Initialize All ---
+document.addEventListener('DOMContentLoaded', () => {
+  initLotto();
+  initAI();
 });
