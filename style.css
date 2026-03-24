@@ -15,6 +15,10 @@
     
     --shadow-deep: 0 10px 30px -5px oklch(0 0 0 / 0.5);
     --glow-effect: 0 0 20px oklch(0.7 0.2 250 / 0.4);
+    
+    --input-bg: oklch(1 0 0 / 0.05);
+    --input-border: oklch(1 0 0 / 0.1);
+    --input-focus: oklch(0.7 0.2 250 / 0.5);
   }
 
   * {
@@ -31,12 +35,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow-y: auto;
     position: relative;
+    padding: 2rem 0;
   }
 
   .background-texture {
-    position: absolute;
+    position: fixed;
     inset: 0;
     background-image: radial-gradient(circle at 50% 50%, oklch(0.3 0.1 250 / 0.1), transparent);
     z-index: -1;
@@ -55,7 +60,7 @@
 @layer components {
   .container {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     border: 1px solid oklch(1 0 0 / 0.1);
     border-radius: 2rem;
     padding: 3rem;
@@ -63,10 +68,13 @@
     box-shadow: var(--shadow-deep);
     text-align: center;
     container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
   }
 
-  .header h1 {
-    font-size: clamp(2rem, 8cqw, 3.5rem);
+  .header h1, .header h2 {
+    font-size: clamp(2rem, 8cqw, 3rem);
     letter-spacing: -0.05em;
     font-weight: 800;
     margin-bottom: 0.5rem;
@@ -80,11 +88,10 @@
   .header p {
     color: var(--text-secondary);
     font-size: 1.1rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
   .ball-container-wrapper {
-    margin-bottom: 3rem;
     min-height: 120px;
     display: flex;
     justify-content: center;
@@ -105,26 +112,75 @@
     font-style: italic;
   }
 
-  .generate-btn {
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--input-border), transparent);
+  }
+
+  /* Form Styles */
+  .inquiry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-left: 0.5rem;
+  }
+
+  .form-group input, .form-group textarea {
+    padding: 1rem 1.2rem;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 1rem;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--input-focus);
+    background: oklch(1 0 0 / 0.08);
+  }
+
+  .generate-btn, .submit-btn {
     position: relative;
     padding: 1rem 3rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     border: none;
     background: var(--accent-color);
     color: white;
-    border-radius: 100px;
+    border-radius: 1rem;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     overflow: hidden;
   }
 
-  .generate-btn:hover {
+  .submit-btn {
+    margin-top: 1rem;
+    background: oklch(0.6 0.1 250);
+  }
+
+  .generate-btn:hover, .submit-btn:hover {
     transform: translateY(-2px);
     box-shadow: var(--glow-effect);
   }
 
-  .generate-btn:active {
+  .generate-btn:active, .submit-btn:active {
     transform: translateY(0);
   }
 
@@ -141,7 +197,7 @@
     transition: opacity 0.3s;
   }
 
-  .generate-btn:hover .btn-glow {
+  .generate-btn:hover .btn-glow, .submit-btn:hover .btn-glow {
     opacity: 1;
   }
 }
@@ -154,6 +210,11 @@
     
     .container {
       padding: 2rem 1.5rem;
+      gap: 3rem;
+    }
+
+    .header h1, .header h2 {
+      font-size: 1.8rem;
     }
   }
 }

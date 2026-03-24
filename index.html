@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>프리미엄 로또 번호 생성기</title>
+  <title>프리미엄 로또 번호 생성기 & 제휴 문의</title>
   <link href='/style.css' rel='stylesheet'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,24 +12,63 @@
 <body>
   <div class="background-texture"></div>
   <main class="container">
-    <header class="header">
-      <h1>LOTTO <span class="highlight">GENERATOR</span></h1>
-      <p>당신의 행운을 확인해보세요</p>
-    </header>
-    
-    <div class="ball-container-wrapper">
-      <div id="ball-container" class="ball-container">
-        <!-- Lotto balls will be generated here -->
-        <div class="placeholder">번호를 생성해주세요</div>
+    <!-- Lotto Generator Section -->
+    <section id="lotto-section">
+      <header class="header">
+        <h1>LOTTO <span class="highlight">GENERATOR</span></h1>
+        <p>당신의 행운을 확인해보세요</p>
+      </header>
+      
+      <div class="ball-container-wrapper">
+        <div id="ball-container" class="ball-container">
+          <div class="placeholder">번호를 생성해주세요</div>
+        </div>
       </div>
-    </div>
 
-    <div class="controls">
-      <button id="generate-btn" class="generate-btn">
-        <span class="btn-text">번호 생성하기</span>
-        <div class="btn-glow"></div>
-      </button>
-    </div>
+      <div class="controls">
+        <button id="generate-btn" class="generate-btn">
+          <span class="btn-text">번호 생성하기</span>
+          <div class="btn-glow"></div>
+        </button>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Partnership Inquiry Section -->
+    <section id="inquiry-section" class="inquiry-section">
+      <header class="header">
+        <h2>제휴 <span class="highlight">문의</span></h2>
+        <p>비즈니스 파트너십을 제안해주세요</p>
+      </header>
+
+      <form action="https://formspree.io/f/mwvrgwea" method="POST" class="inquiry-form">
+        <div class="form-group">
+          <label for="name">성함 / 업체명</label>
+          <input type="text" id="name" name="name" placeholder="홍길동" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">이메일 주소</label>
+          <input type="email" id="email" name="email" placeholder="example@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">문의 제목</label>
+          <input type="text" id="subject" name="subject" placeholder="제휴 제안" required>
+        </div>
+
+        <div class="form-group">
+          <label for="message">문의 내용</label>
+          <textarea id="message" name="message" rows="4" placeholder="상세 내용을 입력해주세요" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <span class="btn-text">제안 보내기</span>
+          <div class="btn-glow"></div>
+        </button>
+      </form>
+    </section>
   </main>
   <script defer type="module" src="/main.js"></script>
 </body>

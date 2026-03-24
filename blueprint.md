@@ -8,22 +8,15 @@ A modern, interactive web-based Lotto number generator that provides a visually 
 - **Web Components:** Uses a `<lotto-ball>` custom element for encapsulated styling and behavior.
 - **Modern CSS:** Employs CSS Variables, Container Queries, and vibrant color palettes (OKLCH).
 - **Interactivity:** Smooth animations when generating numbers and color-coded balls based on number ranges.
+- **Formspree Integration:** Includes a "Partnership Inquiry" form for business contacts.
 
 ## Design Specifications
-- **Typography:** Expressive headings for a premium feel.
-- **Color Palette:** Lotto standard colors for balls:
-    - 1-10: Yellow (oklch(0.8 0.15 85))
-    - 11-20: Blue (oklch(0.6 0.15 250))
-    - 21-30: Red (oklch(0.6 0.2 25))
-    - 31-40: Gray (oklch(0.6 0.05 0))
-    - 41-45: Green (oklch(0.7 0.15 145))
-- **UI Elements:** Interactive "Generate" button with glow effects and responsive card layout.
+- **Typography:** Expressive headings for a premium feel (Pretendard).
+- **Color Palette:** Lotto standard colors for balls (OKLCH based) and deep, modern UI colors.
+- **UI Elements:** Interactive "Generate" button and a sleek partnership inquiry section.
 
-## Current Plan: Lotto Number Generator Implementation
-1.  **Refine index.html:** Update the main structure to include a container for the lotto balls and a trigger button.
-2.  **Modernize style.css:** Implement the design with modern CSS features (OKLCH, logical properties, containers).
-3.  **Enhance main.js:**
-    - Define the `<lotto-ball>` Web Component.
-    - Implement the random number generation logic (6 unique numbers from 1-45).
-    - Add animations for a polished user experience.
-4.  **Verification:** Ensure responsiveness and error-free operation in the browser preview.
+## Current Plan: Partnership Inquiry Form Implementation
+1.  **Update index.html:** Add the inquiry form section below the lotto generator.
+2.  **Update style.css:** Style the form inputs and labels with a premium, modern aesthetic.
+3.  **Update main.js:** Handle simple form submission feedback (optional).
+4.  **Verification:** Ensure the form action points to `https://formspree.io/f/mwvrgwea`.
