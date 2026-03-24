@@ -44,7 +44,6 @@
     overflow-y: auto;
     position: relative;
     padding-top: var(--nav-height);
-    padding-bottom: 4rem;
   }
 
   .background-texture {
@@ -129,6 +128,7 @@
     flex-direction: column;
     gap: 4rem;
     margin-top: 2rem;
+    margin-bottom: 4rem;
   }
 
   .header h1, .header h2 {
@@ -146,7 +146,17 @@
   .header p {
     color: var(--text-secondary);
     font-size: 1.1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .rich-content {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+    text-align: center;
+    opacity: 0.9;
   }
 
   /* Lotto Styles */
@@ -254,6 +264,75 @@
     width: 0%;
     transition: width 0.3s ease;
     box-shadow: 0 0 10px var(--accent-color);
+  }
+
+  /* Footer Styles */
+  .footer {
+    width: 100%;
+    background: oklch(0.1 0.05 250);
+    padding: 3rem 0;
+    border-top: 1px solid oklch(1 0 0 / 0.1);
+    margin-top: auto;
+  }
+
+  .footer-content {
+    width: min(90%, 800px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .footer-info p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+    opacity: 0.8;
+  }
+
+  .footer-links a:hover {
+    color: var(--accent-color);
+    opacity: 1;
+  }
+
+  /* Info Pages (About, Privacy, Terms) */
+  .info-page {
+    text-align: left;
+    gap: 2rem;
+  }
+
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .info-content h3 {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    margin-top: 1rem;
+  }
+
+  .info-content p {
+    color: var(--text-secondary);
+    font-size: 1rem;
   }
 
   /* Form/Common Styles */
@@ -375,6 +454,10 @@
 
     .nav-link {
       font-size: 0.9rem;
+    }
+    
+    .footer-links {
+      gap: 1rem;
     }
   }
 }
