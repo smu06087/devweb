@@ -118,81 +118,70 @@ const initLotto = () => {
   });
 };
 
-// --- Animal AI Logic ---
+// --- Animal AI Logic (Image Upload Version) ---
 const TM_URL = "https://teachablemachine.withgoogle.com/models/7zneaY_Vl/";
-let model, webcam, labelContainer, maxPredictions;
+let model, labelContainer, maxPredictions;
 
 const initAI = async () => {
-  const startBtn = document.getElementById('ai-start-btn');
-  const webcamContainer = document.getElementById('webcam-container');
+  const imageUpload = document.getElementById('image-upload');
+  const imagePreview = document.getElementById('image-preview');
+  const previewPlaceholder = document.getElementById('preview-placeholder');
+  const uploadLabel = document.getElementById('upload-label');
   labelContainer = document.getElementById('label-container');
 
-  if (!startBtn) return;
+  if (!imageUpload || !imagePreview || !labelContainer) return;
 
-  startBtn.addEventListener('click', async () => {
-    startBtn.disabled = true;
-    startBtn.querySelector('.btn-text').textContent = "모델 로딩 중...";
+  // Load model immediately
+  const modelURL = TM_URL + "model.json";
+  const metadataURL = TM_URL + "metadata.json";
+  model = await tmImage.load(modelURL, metadataURL);
+  maxPredictions = model.getTotalClasses();
 
-    const modelURL = TM_URL + "model.json";
-    const metadataURL = TM_URL + "metadata.json";
+  imageUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    try {
-      model = await tmImage.load(modelURL, metadataURL);
-      maxPredictions = model.getTotalClasses();
-
-      const flip = true;
-      webcam = new tmImage.Webcam(200, 200, flip);
-      await webcam.setup();
-      await webcam.play();
-      window.requestAnimationFrame(loopAI);
-
-      webcamContainer.innerHTML = '';
-      webcamContainer.appendChild(webcam.canvas);
-
-      // Setup labels with progress bars
-      labelContainer.innerHTML = '';
-      for (let i = 0; i < maxPredictions; i++) {
-        const prediction = document.createElement("div");
-        prediction.classList.add("prediction-bar");
-        prediction.innerHTML = `
-          <div class="prediction-label">
-            <span class="class-name"></span>
-            <span class="probability">0%</span>
-          </div>
-          <div class="bar-bg">
-            <div class="bar-fill"></div>
-          </div>
-        `;
-        labelContainer.appendChild(prediction);
-      }
-
-      startBtn.style.display = 'none';
-    } catch (error) {
-      console.error("AI Init Error:", error);
-      startBtn.disabled = false;
-      startBtn.querySelector('.btn-text').textContent = "AI 테스트 시작하기 (오류 발생)";
-    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      imagePreview.src = event.target.result;
+      imagePreview.style.display = 'block';
+      previewPlaceholder.style.display = 'none';
+      
+      imagePreview.onload = async () => {
+        await predictAI(imagePreview);
+      };
+    };
+    reader.readAsDataURL(file);
+    
+    uploadLabel.querySelector('.btn-text').textContent = "다른 사진 업로드";
   });
 };
 
-const loopAI = async () => {
-  webcam.update();
-  await predictAI();
-  window.requestAnimationFrame(loopAI);
-};
+const predictAI = async (imageElement) => {
+  const prediction = await model.predict(imageElement);
+  
+  // Setup or Clear results
+  labelContainer.innerHTML = '';
+  
+  // Sort by probability
+  prediction.sort((a, b) => b.probability - a.probability);
 
-const predictAI = async () => {
-  const prediction = await model.predict(webcam.canvas);
   for (let i = 0; i < maxPredictions; i++) {
     const className = prediction[i].className;
     const probability = (prediction[i].probability * 100).toFixed(0);
     
-    const bar = labelContainer.childNodes[i];
-    if (bar) {
-      bar.querySelector('.class-name').textContent = className;
-      bar.querySelector('.probability').textContent = `${probability}%`;
-      bar.querySelector('.bar-fill').style.width = `${probability}%`;
-    }
+    const predictionBar = document.createElement("div");
+    predictionBar.classList.add("prediction-bar");
+    predictionBar.innerHTML = `
+      <div class="prediction-label">
+        <span class="class-name">${className}</span>
+        <span class="probability">${probability}%</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill" style="width: ${probability}%"></div>
+      </div>
+    `;
+    labelContainer.appendChild(predictionBar);
   }
 };
 
